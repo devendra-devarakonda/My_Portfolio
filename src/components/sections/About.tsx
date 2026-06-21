@@ -43,7 +43,6 @@ export default function About() {
                 }}
               />
 
-              {/* Image */}
               <div className="relative w-[200px] h-[200px] rounded-full overflow-hidden border-[3px] border-accent/30 shadow-[0_0_40px_rgba(255,43,77,0.15)] hover:shadow-[0_0_60px_rgba(255,43,77,0.25)] transition-shadow duration-300">
                 <Image
                   src="/images/hero.jpg"
