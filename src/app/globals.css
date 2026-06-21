@@ -1,26 +1,217 @@
-@import "tailwindcss";
 
+/* @import "tailwindcss"; */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   TAILWIND THEME CONFIGURATION
+   ============================================ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-bg-primary: #050B17;
+  --color-bg-secondary: #0A1128;
+  --color-bg-card: rgba(255, 255, 255, 0.04);
+  --color-bg-card-hover: rgba(255, 255, 255, 0.08);
+  --color-glass-bg: rgba(255, 255, 255, 0.03);
+  --color-glass-border: rgba(255, 255, 255, 0.08);
+  --color-accent: #FF2B4D;
+  --color-accent-secondary: #FF4D6D;
+  --color-accent-dark: #CC2240;
+  --color-accent-glow: rgba(255, 43, 77, 0.4);
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #A0A0A0;
+  --color-text-muted: rgba(255, 255, 255, 0.4);
+  --color-border-subtle: rgba(255, 255, 255, 0.08);
+  --color-border-red: rgba(255, 43, 77, 0.3);
+
+  --font-family-heading: 'Orbitron', sans-serif;
+  --font-family-body: 'Inter', sans-serif;
+  --font-family-mono: 'JetBrains Mono', monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ============================================
+   KEYFRAMES
+   ============================================ */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@keyframes pulse-ring {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 10px rgba(255, 43, 77, 0.2), 0 0 20px rgba(255, 43, 77, 0.1); }
+  to { box-shadow: 0 0 20px rgba(255, 43, 77, 0.4), 0 0 40px rgba(255, 43, 77, 0.2); }
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blink {
+  from, to { border-color: transparent; }
+  50% { border-color: #FF2B4D; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes progressFill {
+  from { width: 0%; }
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+@keyframes borderGlow {
+  0%, 100% { border-color: rgba(255, 43, 77, 0.2); }
+  50% { border-color: rgba(255, 43, 77, 0.6); }
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-family-body);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  cursor: none;
+}
+
+/* Restore cursor on mobile */
+@media (max-width: 768px) {
+  body { cursor: auto; }
+}
+
+a { text-decoration: none; color: inherit; }
+ul, ol { list-style: none; }
+img { max-width: 100%; display: block; }
+button { cursor: none; border: none; background: none; font-family: inherit; }
+input, textarea { font-family: inherit; border: none; outline: none; background: none; }
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--color-bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--color-accent-dark); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-accent); }
+
+/* ============================================
+   SELECTION
+   ============================================ */
+::selection {
+  background: rgba(255, 43, 77, 0.3);
+  color: white;
+}
+
+/* ============================================
+   GLASSMORPHISM UTILITY
+   ============================================ */
+.glass {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* ============================================
+   NEON GLOW UTILITIES
+   ============================================ */
+.neon-border {
+  border: 1px solid rgba(255, 43, 77, 0.3);
+  box-shadow: 0 0 15px rgba(255, 43, 77, 0.1), inset 0 0 15px rgba(255, 43, 77, 0.05);
+}
+
+.neon-text {
+  text-shadow: 0 0 10px rgba(255, 43, 77, 0.5), 0 0 20px rgba(255, 43, 77, 0.3);
+}
+
+.neon-glow {
+  box-shadow: 0px 0px 20px rgba(255, 43, 77, 0.5);
+}
+
+/* ============================================
+   RED DOT DECORATION
+   ============================================ */
+.red-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--color-accent);
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(255, 43, 77, 0.6), 0 0 30px rgba(255, 43, 77, 0.3);
+}
+
+/* ============================================
+   PROGRESS BAR
+   ============================================ */
+.progress-bar-fill {
+  animation: progressFill 1.5s ease forwards;
+}
+
+/* ============================================
+   SHIMMER EFFECT
+   ============================================ */
+.shimmer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: 0.5s;
+}
+
+.shimmer:hover::before {
+  animation: shimmer 0.8s forwards;
 }

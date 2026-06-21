@@ -1,0 +1,196 @@
+
+:root {
+  --neon-red: #ff4d6d;
+  --neon-yellow: #ffd98a;
+  --glass-bg: rgba(5, 11, 23, 0.5);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --font-outfit: var(--font-family-outfit), sans-serif;
+  --font-mono: var(--font-family-share-tech), monospace;
+}
+
+/* Base styling */
+.tech-container {
+  height: 100%;
+  width: 100%;
+  background-color: #030712; /* Very dark slate/gray background */
+  font-family: var(--font-outfit);
+  color: #f3f4f6;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Background Particle Grid */
+.particle-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(rgba(255, 77, 109, 0.05) 1px, transparent 0),
+    radial-gradient(rgba(255, 217, 138, 0.03) 1.5px, transparent 0);
+  background-size: 40px 40px, 80px 80px;
+  background-position: 0 0, 20px 20px;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.tech-heading {
+  font-family: var(--font-outfit);
+  letter-spacing: 0.15em;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.category-title {
+  font-family: var(--font-outfit);
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 20px rgba(255, 77, 109, 0.4);
+}
+
+/* Glassmorphism panels */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-panel:hover {
+  border-color: rgba(255, 77, 109, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(255, 77, 109, 0.05);
+}
+
+/* Custom interactive node */
+.tech-node-card {
+  background: rgba(5, 11, 23, 0.65);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 10px 14px;
+  width: 170px;
+  cursor: pointer;
+  z-index: 20;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.tech-node-card:hover {
+  background: rgba(5, 11, 23, 0.85);
+  border-color: var(--neon-red);
+  box-shadow: 0 0 20px rgba(255, 77, 109, 0.25);
+}
+
+@media (max-width: 768px) {
+  .tech-node-card {
+    padding: 6px 8px;
+    width: 130px;
+    border-radius: 8px;
+  }
+}
+
+/* Connection SVGs */
+.svg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 18; /* Higher than canvas (15) so lines render in front of core */
+  overflow: visible;
+}
+
+.connection-line {
+  stroke: var(--neon-red);
+  stroke-width: 1.5px;
+  fill: none;
+  transition: stroke-width 0.3s ease, stroke 0.3s ease, opacity 0.3s ease;
+}
+
+/* Tooltip Panel */
+.tooltip-panel {
+  position: absolute;
+  z-index: 50;
+  width: 250px;
+  background: rgba(3, 7, 18, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 77, 109, 0.4);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 77, 109, 0.1);
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .tooltip-panel {
+    width: 200px;
+    padding: 10px;
+  }
+}
+
+/* Boot Terminal Loader */
+.boot-terminal {
+  font-family: var(--font-mono);
+  background-color: #02040a;
+  border: 1px solid rgba(255, 77, 109, 0.15);
+  box-shadow: 0 0 40px rgba(255, 77, 109, 0.05);
+}
+
+.boot-cursor::after {
+  content: '█';
+  animation: blink 0.8s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Custom Scrollbars */
+.custom-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 77, 109, 0.3);
+  border-radius: 4px;
+}
+
+/* R3F Canvas styling */
+.canvas-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 300px;
+  z-index: 15;
+  pointer-events: none; /* Let clicks pass through to background/nodes */
+}
+
+@media (max-width: 1024px) {
+  .canvas-container {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .canvas-container {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+/* Glow filters for SVG */
+.glow-filter-red {
+  filter: drop-shadow(0 0 4px var(--neon-red)) drop-shadow(0 0 10px rgba(255, 77, 109, 0.4));
+}
+
+.glow-filter-yellow {
+  filter: drop-shadow(0 0 5px var(--neon-yellow)) drop-shadow(0 0 12px rgba(255, 217, 138, 0.5));
+}

@@ -1,0 +1,117 @@
+
+.timeline-container {
+  background-color: #050B17;
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow-y: auto; /* Allow vertical scrolling to access all cards */
+  overflow-x: hidden; /* Avoid horizontal scrolling */
+  font-family: var(--font-family-outfit), sans-serif;
+  color: #1a1a1a;
+}
+
+.timeline-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+  overflow: visible; /* Prevent glow filters from clipping at SVG borders */
+}
+
+/* Glassmorphism Cards with 3D Light Refraction Borders */
+.glass-card {
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  
+  /* Dual-tone border for 3D glass edge refraction */
+  border-top: 1.5px solid rgba(255, 255, 255, 0.65);
+  border-left: 1.5px solid rgba(255, 255, 255, 0.65);
+  border-right: 1.5px solid rgba(255, 255, 255, 0.25);
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.25);
+  
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05),
+              0 0 25px rgba(255, 255, 255, 0.3),
+              inset 0 0 15px rgba(255, 255, 255, 0.25);
+  border-radius: 18px;
+  position: absolute;
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 20;
+}
+
+.glass-card:hover {
+  transform: translateY(-8px) scale(1.03) !important;
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.08),
+              0 0 35px rgba(255, 255, 255, 0.5),
+              inset 0 0 20px rgba(255, 255, 255, 0.35);
+}
+
+/* Glass Shine Effect Sweep */
+.glass-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.35) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-20deg);
+  animation: shine-sweep 7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes shine-sweep {
+  0% { left: -150%; }
+  15% { left: 150%; }
+  100% { left: 150%; }
+}
+
+/* Traveling Light on SVG Path */
+.pulse-path {
+  stroke-dasharray: 120 1200;
+  stroke-dashoffset: 0;
+  animation: svg-travel 5s linear infinite;
+}
+
+@keyframes svg-travel {
+  0% {
+    stroke-dashoffset: 1320;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Glass Button style */
+.glass-btn {
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  color: #374151;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-btn:hover {
+  background: rgba(255, 255, 255, 0.55);
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+  color: #111827;
+}
+
+/* Card Header Gradient */
+.card-header-bg {
+  background: linear-gradient(to right, #d9c28a, #f4e6b5, #d9c28a);
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.35);
+}
