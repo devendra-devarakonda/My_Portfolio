@@ -1,5 +1,20 @@
 "use client";
 
+// Suppress THREE.Clock deprecation warning from @react-three/fiber internals
+if (typeof window !== "undefined") {
+  const originalWarn = console.warn;
+  console.warn = (...args: any[]) => {
+    if (
+      args[0] &&
+      typeof args[0] === "string" &&
+      args[0].includes("THREE.Clock: This module has been deprecated")
+    ) {
+      return;
+    }
+    originalWarn(...args);
+  };
+}
+
 import dynamic from "next/dynamic";
 import CinematicLoader from "@/components/effects/CinematicLoader";
 import ParticleBackground from "@/components/effects/ParticleBackground";
