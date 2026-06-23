@@ -26,7 +26,7 @@ export default function Projects() {
   });
 
   return (
-    <section id="projects" className="relative py-24 md:py-32 bg-bg-secondary overflow-hidden">
+    <section id="projects" className="relative py-24 md:py-32 bg-gradient-to-b from-[#030712] to-bg-secondary overflow-hidden">
       <div className="max-w-[1200px] mx-auto px-6" ref={ref}>
         {/* Header */}
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 mb-12">

@@ -171,7 +171,7 @@ export default function Skills() {
     <section 
       id="skills"
       ref={containerRef}
-      className="tech-container py-12 md:py-16 flex flex-col items-center justify-between min-h-[125vh]"
+      className="tech-container py-12 md:py-16 flex flex-col items-center justify-between min-h-[125vh] bg-gradient-to-b from-bg-secondary to-[#030712]"
       onMouseEnter={() => setIsSectionHovered(true)}
       onMouseLeave={() => setIsSectionHovered(false)}
     >

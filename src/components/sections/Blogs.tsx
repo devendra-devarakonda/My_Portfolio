@@ -11,7 +11,7 @@ export default function Blogs() {
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="blogs" className="relative py-24 md:py-32 bg-bg-secondary overflow-hidden">
+    <section id="blogs" className="relative py-24 md:py-32 bg-gradient-to-b from-bg-secondary to-bg-primary overflow-hidden">
       <div className="max-w-[1200px] mx-auto px-6" ref={ref}>
         <motion.h2
           className="text-3xl md:text-4xl font-black tracking-[3px] uppercase mb-12"
