@@ -215,3 +215,14 @@ input, textarea { font-family: inherit; border: none; outline: none; background:
 .shimmer:hover::before {
   animation: shimmer 0.8s forwards;
 }
+
+/* ============================================
+   HIDE SPLINE WATERMARK
+   ============================================ */
+a[href*="spline.design"],
+a[href*="spline"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}

@@ -1,9 +1,29 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { socialLinks } from "@/lib/data";
 import { Send } from "lucide-react";
+import dynamic from "next/dynamic";
+
+const Spline = dynamic(() => import("@splinetool/react-spline"), {
+  ssr: false,
+});
+
+// Suppress internal Spline runtime timeline error in Next.js DevTools overlay
+if (typeof window !== "undefined") {
+  const originalError = console.error;
+  console.error = (...args: any[]) => {
+    if (
+      args[0] &&
+      typeof args[0] === "string" &&
+      args[0].includes("Missing property")
+    ) {
+      return;
+    }
+    originalError(...args);
+  };
+}
 
 // Custom SVG icons since lucide-react removed brand icons
 const LinkedInIcon = () => (
@@ -30,18 +50,65 @@ const InstagramIcon = () => (
   </svg>
 );
 
+const MediumIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+    <path d="M13.54 12a6.8 6.8 0 0 1-6.77 6.82A6.8 6.8 0 0 1 0 12a6.8 6.8 0 0 1 6.77-6.82A6.8 6.8 0 0 1 13.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42s-3.38-2.88-3.38-6.42 1.51-6.42 3.38-6.42 3.38 2.88 3.38 6.42zm3.04 0c0 3.24-.31 5.86-.7 5.86s-.7-2.62-.7-5.86.31-5.86.7-5.86.7 2.62.7 5.86z"/>
+  </svg>
+);
+
 const socialIcons: Record<string, React.ReactNode> = {
   linkedin: <LinkedInIcon />,
   github: <GitHubIcon />,
   twitter: <XIcon />,
   instagram: <InstagramIcon />,
+  medium: <MediumIcon />,
 };
 
 export default function Contact() {
   const ref = useRef(null);
+  const splineContainerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [isSplineLoading, setIsSplineLoading] = useState(true);
+
+  useEffect(() => {
+    const container = splineContainerRef.current;
+    if (!container) return;
+
+    const cleanup = () => {
+      // 1. Light DOM links
+      container.querySelectorAll('a[href*="spline.design"]').forEach((el) => el.remove());
+      container.querySelectorAll('a[href*="spline"]').forEach((el) => el.remove());
+
+      // 2. Shadow DOM links/elements (like #logo in spline-viewer)
+      container.querySelectorAll('*').forEach((el) => {
+        if (el.shadowRoot) {
+          el.shadowRoot.querySelectorAll('#logo, a[href*="spline"], a[href*="spline.design"]').forEach((logo) => {
+            logo.remove();
+          });
+        }
+      });
+    };
+
+    cleanup();
+
+    const observer = new MutationObserver(() => {
+      cleanup();
+    });
+
+    observer.observe(container, {
+      childList: true,
+      subtree: true,
+    });
+
+    const interval = setInterval(cleanup, 500);
+
+    return () => {
+      observer.disconnect();
+      clearInterval(interval);
+    };
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,102 +118,146 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="relative py-24 md:py-32 bg-bg-primary overflow-hidden">
+    <section id="contact" className="relative py-24 lg:py-32 bg-bg-primary overflow-hidden min-h-[650px] flex items-center">
       {/* Red decorative lines */}
       <div className="absolute top-20 right-0 w-20 h-[1px] bg-gradient-to-l from-accent/30 to-transparent" />
       <div className="absolute bottom-20 left-0 w-20 h-[1px] bg-gradient-to-r from-accent/30 to-transparent" />
 
-      <div className="max-w-[600px] mx-auto px-6" ref={ref}>
-        <motion.h2
-          className="text-3xl md:text-4xl font-black tracking-[3px] uppercase text-center mb-12"
-          style={{ fontFamily: "var(--font-family-heading)" }}
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-        >
-          MY CONTACT
-        </motion.h2>
-
-        <motion.form
-          onSubmit={handleSubmit}
-          className="flex flex-col gap-5"
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          {/* Name + Email row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div className="relative group">
-              <input
-                type="text"
-                placeholder="Name"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                required
-                className="interactive w-full px-5 py-3.5 bg-white/[0.03] border border-white/[0.08] rounded-lg text-sm text-white placeholder:text-white/30 focus:border-accent/50 focus:shadow-[0_0_15px_rgba(255,43,77,0.1)] transition-all duration-300"
-              />
+      {/* Spline Canvas wrapper
+          Mobile: absolute background, low opacity, clicks pass-through
+          Laptop/Desktop: positioned on the left half, full opacity, interactive
+      */}
+      <div 
+        ref={splineContainerRef}
+        className="absolute inset-0 lg:left-0 lg:right-auto lg:w-1/2 lg:h-[600px] lg:top-1/2 lg:-translate-y-1/2 z-0 lg:z-10 opacity-30 lg:opacity-100 pointer-events-none lg:pointer-events-auto transition-opacity duration-700"
+      >
+        {isSplineLoading && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-bg-primary/50 backdrop-blur-sm z-20">
+            <div className="relative w-14 h-14 mb-4">
+              <div className="absolute inset-0 rounded-full border-2 border-accent/20 animate-pulse" />
+              <div className="absolute inset-0 rounded-full border-2 border-t-accent animate-spin" />
             </div>
-            <div className="relative group">
-              <input
-                type="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                required
-                className="interactive w-full px-5 py-3.5 bg-white/[0.03] border border-white/[0.08] rounded-lg text-sm text-white placeholder:text-white/30 focus:border-accent/50 focus:shadow-[0_0_15px_rgba(255,43,77,0.1)] transition-all duration-300"
-              />
-            </div>
-          </div>
-
-          {/* Message */}
-          <div className="relative group">
-            <textarea
-              placeholder="Message"
-              value={formData.message}
-              onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-              required
-              rows={5}
-              className="interactive w-full px-5 py-3.5 bg-white/[0.03] border border-white/[0.08] rounded-lg text-sm text-white placeholder:text-white/30 focus:border-accent/50 focus:shadow-[0_0_15px_rgba(255,43,77,0.1)] transition-all duration-300 resize-none"
-            />
-          </div>
-
-          {/* Submit button */}
-          <motion.button
-            type="submit"
-            className="interactive relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-accent text-white text-[0.75rem] font-bold tracking-[2px] uppercase rounded-md overflow-hidden transition-all duration-300 hover:bg-accent-dark shimmer self-start"
-            style={{
-              fontFamily: "var(--font-family-heading)",
-              boxShadow: "0 0 30px rgba(255,43,77,0.3)",
-            }}
-            whileHover={{ scale: 1.02, y: -2 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <Send className="w-4 h-4" />
-            {submitted ? "Message Sent!" : "Send Message"}
-          </motion.button>
-        </motion.form>
-
-        {/* Social links */}
-        <motion.div
-          className="flex items-center justify-center gap-5 mt-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.5 }}
-        >
-          {socialLinks.map((link) => (
-            <motion.a
-              key={link.name}
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="interactive w-11 h-11 rounded-full border border-white/[0.08] flex items-center justify-center text-white/50 hover:text-accent hover:border-accent/50 hover:shadow-[0_0_20px_rgba(255,43,77,0.2)] transition-all duration-300"
-              whileHover={{ y: -3 }}
-              aria-label={link.name}
+            <span 
+              className="text-[10px] uppercase tracking-[3px] text-accent font-bold animate-pulse"
+              style={{ fontFamily: "var(--font-family-heading)" }}
             >
-              {socialIcons[link.icon]}
-            </motion.a>
-          ))}
-        </motion.div>
+              Loading 3D Core...
+            </span>
+          </div>
+        )}
+        <Spline
+          scene="https://prod.spline.design/ugsf8Y3oatPuKhvV/scene.splinecode"
+          onLoad={() => setIsSplineLoading(false)}
+        />
+      </div>
+
+      <div className="relative z-10 max-w-[600px] lg:max-w-[1200px] w-full mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center" ref={ref}>
+        {/* Left spacer column for laptop/desktop (so Spline has its visual area) */}
+        <div className="hidden lg:block h-[560px] relative pointer-events-none">
+          {/* Cover panel containing social links to mask the Spline watermark on laptop */}
+          <div className="absolute bottom-0 left-32 bg-bg-primary pl-4 pt-4 pb-2 pr-2 z-20 pointer-events-auto flex items-center gap-40 rounded-tl-xl border-t border-l border-white/[0.05]">
+            {socialLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="interactive w-9 h-9 rounded-full border border-white/[0.08] flex items-center justify-center text-white/50 hover:text-accent hover:border-accent/50 hover:shadow-[0_0_20px_rgba(255,43,77,0.2)] transition-all duration-300 bg-white/[0.02]"
+                aria-label={link.name}
+              >
+                {socialIcons[link.icon]}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {/* Right column containing the Contact Heading, Form, and Social Links */}
+        <div className="w-full flex flex-col">
+          <motion.h2
+            className="text-3xl md:text-4xl font-black tracking-[3px] uppercase text-center lg:text-left mb-12"
+            style={{ fontFamily: "var(--font-family-heading)" }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+          >
+            MY CONTACT
+          </motion.h2>
+
+          <motion.form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-5 w-full"
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            {/* Name + Email row */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div className="relative group">
+                <input
+                  type="text"
+                  placeholder="Name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  required
+                  className="interactive w-full px-5 py-3.5 bg-white/[0.03] border border-white/[0.08] rounded-lg text-sm text-white placeholder:text-white/30 focus:border-accent/50 focus:shadow-[0_0_15px_rgba(255,43,77,0.1)] transition-all duration-300"
+                />
+              </div>
+              <div className="relative group">
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  required
+                  className="interactive w-full px-5 py-3.5 bg-white/[0.03] border border-white/[0.08] rounded-lg text-sm text-white placeholder:text-white/30 focus:border-accent/50 focus:shadow-[0_0_15px_rgba(255,43,77,0.1)] transition-all duration-300"
+                />
+              </div>
+            </div>
+
+            {/* Message */}
+            <div className="relative group">
+              <textarea
+                placeholder="Message"
+                value={formData.message}
+                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                required
+                rows={5}
+                className="interactive w-full px-5 py-3.5 bg-white/[0.03] border border-white/[0.08] rounded-lg text-sm text-white placeholder:text-white/30 focus:border-accent/50 focus:shadow-[0_0_15px_rgba(255,43,77,0.1)] transition-all duration-300 resize-none"
+              />
+            </div>
+
+            {/* Submit button */}
+            <motion.button
+              type="submit"
+              className="interactive relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-accent text-white text-[0.75rem] font-bold tracking-[2px] uppercase rounded-md overflow-hidden transition-all duration-300 hover:bg-accent-dark shimmer self-start lg:self-start mx-auto lg:mx-0"
+              style={{
+                fontFamily: "var(--font-family-heading)",
+                boxShadow: "0 0 30px rgba(255,43,77,0.3)",
+              }}
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Send className="w-4 h-4" />
+              {submitted ? "Message Sent!" : "Send Message"}
+            </motion.button>
+          </motion.form>
+        </div>
+      </div>
+
+      {/* Mobile-only social links positioned at the bottom right to mask the Spline watermark */}
+      <div className="lg:hidden absolute bottom-3 right-3 bg-bg-primary pl-4 pt-4 pb-2 pr-2 z-20 pointer-events-auto flex items-center gap-4 rounded-tl-xl border-t border-l border-white/[0.05]">
+        {socialLinks.map((link) => (
+          <a
+            key={link.name}
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="interactive w-9 h-9 rounded-full border border-white/[0.08] flex items-center justify-center text-white/50 hover:text-accent hover:border-accent/50 hover:shadow-[0_0_20px_rgba(255,43,77,0.2)] transition-all duration-300 bg-white/[0.02]"
+            aria-label={link.name}
+          >
+            {socialIcons[link.icon]}
+          </a>
+        ))}
       </div>
     </section>
   );

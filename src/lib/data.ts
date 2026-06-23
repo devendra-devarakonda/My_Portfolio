@@ -125,6 +125,7 @@ export const socialLinks = [
   { name: "GitHub", url: "https://github.com", icon: "github" },
   { name: "Twitter", url: "https://x.com", icon: "twitter" },
   { name: "Instagram", url: "https://instagram.com", icon: "instagram" },
+  { name: "Medium", url: "https://medium.com", icon: "medium" },
 ];
 
 export const terminalCommands = [
