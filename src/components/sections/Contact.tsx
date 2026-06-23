@@ -118,7 +118,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="relative py-24 lg:py-32 bg-bg-primary overflow-hidden min-h-[650px] flex items-center">
+    <section id="contact" className="relative py-24 lg:py-32 bg-black/30 backdrop-blur-sm overflow-hidden min-h-[650px] flex items-center">
       {/* Red decorative lines */}
       <div className="absolute top-20 right-0 w-20 h-[1px] bg-gradient-to-l from-accent/30 to-transparent" />
       <div className="absolute bottom-20 left-0 w-20 h-[1px] bg-gradient-to-r from-accent/30 to-transparent" />

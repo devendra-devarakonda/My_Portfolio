@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Orbitron, Inter, JetBrains_Mono, Outfit, Share_Tech_Mono } from "next/font/google";
 import "./globals.css";
+import SmoothScrollProvider from "@/components/effects/SmoothScrollProvider";
 
 const orbitron = Orbitron({
   subsets: ["latin"],
@@ -47,7 +48,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body className={`${inter.variable} ${orbitron.variable} ${jetbrainsMono.variable} ${outfit.variable} ${shareTechMono.variable} min-h-screen bg-[#050B17] text-white antialiased overflow-x-hidden`} suppressHydrationWarning>
-        {children}
+        <SmoothScrollProvider>
+          {children}
+        </SmoothScrollProvider>
       </body>
     </html>
   );

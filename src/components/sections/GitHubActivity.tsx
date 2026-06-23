@@ -120,7 +120,7 @@ export default function GitHubActivity() {
   }, [contributions]);
 
   return (
-    <section className="relative py-16 md:py-24 bg-gradient-to-b from-bg-secondary to-bg-primary overflow-hidden">
+    <section className="relative py-16 md:py-24 bg-black/30 backdrop-blur-sm overflow-hidden">
       <div className="max-w-[1200px] mx-auto px-6" ref={ref}>
         <motion.h2
           className="text-2xl md:text-3xl font-black tracking-[3px] uppercase mb-10"

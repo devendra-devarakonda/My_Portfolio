@@ -35,7 +35,7 @@ export default function EducationTimeline() {
   const mobileContainerHeight = mobileSvgHeight + 100;
 
   return (
-    <section className="timeline-container py-24 md:py-32 flex flex-col items-center justify-center bg-gradient-to-b from-bg-primary to-bg-secondary">
+    <section className="timeline-container py-24 md:py-32 flex flex-col items-center justify-center bg-black/30 backdrop-blur-sm">
       {/* Desktop / Tablet View */}
       {!isMobile ? (
         <div

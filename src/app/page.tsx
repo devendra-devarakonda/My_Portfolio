@@ -17,9 +17,14 @@ if (typeof window !== "undefined") {
 
 import dynamic from "next/dynamic";
 import CinematicLoader from "@/components/effects/CinematicLoader";
-import ParticleBackground from "@/components/effects/ParticleBackground";
 import Navbar from "@/components/layout/Navbar";
 import Hero from "@/components/sections/Hero"; // Keep Hero static so it draws fast above the fold
+import { BackgroundProvider } from "@/components/backgrounds/BackgroundProvider";
+
+const GlobalBackground = dynamic(
+  () => import("@/components/backgrounds/GlobalBackground"),
+  { ssr: false }
+);
 
 // Dynamically split off sections below the fold
 const About = dynamic(() => import("@/components/sections/About"), { ssr: false });
@@ -36,15 +41,15 @@ const CustomCursor = dynamic(() => import("@/components/effects/CustomCursor"), 
 
 export default function Home() {
   return (
-    <>
+    <BackgroundProvider>
       {/* Cinematic Loader */}
       <CinematicLoader />
 
       {/* Custom Cursor */}
       <CustomCursor />
 
-      {/* Background particles */}
-      <ParticleBackground />
+      {/* Global LiquidEther Background */}
+      <GlobalBackground />
 
       {/* Floating Hire Me CTA */}
       <FloatingHireCTA />
@@ -65,6 +70,6 @@ export default function Home() {
       </main>
 
       <Footer />
-    </>
+    </BackgroundProvider>
   );
 }
