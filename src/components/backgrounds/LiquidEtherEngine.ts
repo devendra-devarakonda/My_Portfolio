@@ -86,11 +86,11 @@ const color_frag = `
   varying vec2 uv;
   void main(){
     vec2 vel = texture2D(velocity, uv).xy;
-    float lenv = clamp(length(vel), 0.0, 1.0);
+    float lenv = clamp(length(vel)*1.8, 0.0, 1.0);
     vec3 c = texture2D(palette, vec2(lenv, 0.5)).rgb;
     vec3 outRGB = mix(bgColor.rgb, c, lenv);
-    float outA = mix(bgColor.a, 1.0, lenv);
-    gl_FragColor = vec4(outRGB, outA);
+    float outA = mix(bgColor.a, 1.0, pow(lenv, 0.9));
+    gl_FragColor = vec4(outRGB, outA*1.4);
   }
 `;
 
@@ -226,9 +226,9 @@ interface QualityProfile {
 }
 
 const QUALITY_PROFILES: QualityProfile[] = [
-  { resolution: 0.45, iterationsPoisson: 16, iterationsViscous: 8, pixelRatio: 1.0 },   // Low
-  { resolution: 0.70, iterationsPoisson: 24, iterationsViscous: 16, pixelRatio: 1.25 }, // Medium
-  { resolution: 0.90, iterationsPoisson: 32, iterationsViscous: 32, pixelRatio: 1.5 }   // High
+  { resolution: 0.25, iterationsPoisson: 6, iterationsViscous: 2, pixelRatio: 1.0 },   // Low
+  { resolution: 0.35, iterationsPoisson: 8, iterationsViscous: 4, pixelRatio: 1.0 },   // Medium
+  { resolution: 0.50, iterationsPoisson: 12, iterationsViscous: 6, pixelRatio: 1.25 }  // High
 ];
 
 // --- WebGL Core Classes ---
@@ -1286,7 +1286,7 @@ export class WebGLManager {
   init() {
     if (this.common.renderer && this.paletteTex) {
       this.props.$wrapper.prepend(this.common.renderer.domElement);
-      const bgVec4 = new THREE.Vector4(0, 0, 0, 0); // Always transparent canvas inside the overlay
+      const bgVec4 = new THREE.Vector4(0, 0, 0, 0.4); // Always transparent canvas inside the overlay
       
       // Determine starting profile (Mobile users start directly at Low to avoid frame drop spikes)
       const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(

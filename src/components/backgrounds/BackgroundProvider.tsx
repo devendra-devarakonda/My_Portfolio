@@ -8,12 +8,15 @@ interface BackgroundContextType {
   isInitialized: boolean;
   registerManager: (manager: WebGLManager) => void;
   unregisterManager: () => void;
+  isLiquidEtherEnabled: boolean;
+  setIsLiquidEtherEnabled: (enabled: boolean) => void;
 }
 
 const BackgroundContext = createContext<BackgroundContextType | null>(null);
 
 export function BackgroundProvider({ children }: { children: React.ReactNode }) {
   const [webglManager, setWebglManager] = useState<WebGLManager | null>(null);
+  const [isLiquidEtherEnabled, setIsLiquidEtherEnabled] = useState(false);
 
   const registerManager = useCallback((manager: WebGLManager) => {
     setWebglManager(manager);
@@ -38,7 +41,9 @@ export function BackgroundProvider({ children }: { children: React.ReactNode }) 
         webglManager,
         isInitialized: webglManager !== null,
         registerManager,
-        unregisterManager
+        unregisterManager,
+        isLiquidEtherEnabled,
+        setIsLiquidEtherEnabled
       }}
     >
       {children}

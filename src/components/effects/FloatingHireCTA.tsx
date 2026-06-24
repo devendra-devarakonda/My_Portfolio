@@ -16,7 +16,14 @@ export default function FloatingHireCTA() {
   }, []);
 
   const scrollToContact = () => {
-    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+    const target = document.getElementById("contact");
+    if (target) {
+      if ((window as any).lenis) {
+        (window as any).lenis.scrollTo(target);
+      } else {
+        target.scrollIntoView({ behavior: "smooth" });
+      }
+    }
   };
 
   return (

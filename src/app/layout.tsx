@@ -46,7 +46,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${orbitron.variable} ${jetbrainsMono.variable} ${outfit.variable} ${shareTechMono.variable} min-h-screen bg-[#050B17] text-white antialiased overflow-x-hidden`} suppressHydrationWarning>
         <SmoothScrollProvider>
           {children}

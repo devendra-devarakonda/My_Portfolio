@@ -9,16 +9,19 @@ export default function SmoothScrollProvider({ children }: { children: React.Rea
   useEffect(() => {
     // Instantiate Lenis with configuration settings optimized for Framer Motion + WebGL combinations
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 0.7,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1.0, // Restored to 1.0 to ensure predictable velocity curves
-      touchMultiplier: 2,
+      wheelMultiplier: 1.2,
+      touchMultiplier: 1.3,
     });
 
     lenisRef.current = lenis;
+    if (typeof window !== "undefined") {
+      (window as any).lenis = lenis;
+    }
 
     let rafId: number;
     function raf(time: number) {
@@ -44,6 +47,9 @@ export default function SmoothScrollProvider({ children }: { children: React.Rea
     return () => {
       cancelAnimationFrame(rafId);
       lenis.destroy();
+      if (typeof window !== "undefined") {
+        delete (window as any).lenis;
+      }
       window.removeEventListener("hashchange", handleHashChange);
     };
   }, []);

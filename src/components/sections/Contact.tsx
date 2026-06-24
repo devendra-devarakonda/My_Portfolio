@@ -66,6 +66,8 @@ const socialIcons: Record<string, React.ReactNode> = {
 
 export default function Contact() {
   const ref = useRef(null);
+  const sectionRef = useRef(null);
+  const isNearView = useInView(sectionRef, { margin: "400px 0px 400px 0px" });
   const splineContainerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
@@ -118,7 +120,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="relative py-24 lg:py-32 bg-black/30 backdrop-blur-sm overflow-hidden min-h-[650px] flex items-center">
+    <section id="contact" ref={sectionRef} className="relative py-24 lg:py-32 bg-[#050B17]/90 overflow-hidden min-h-[650px] flex items-center">
       {/* Red decorative lines */}
       <div className="absolute top-20 right-0 w-20 h-[1px] bg-gradient-to-l from-accent/30 to-transparent" />
       <div className="absolute bottom-20 left-0 w-20 h-[1px] bg-gradient-to-r from-accent/30 to-transparent" />
@@ -131,7 +133,7 @@ export default function Contact() {
         ref={splineContainerRef}
         className="absolute inset-0 lg:left-0 lg:right-auto lg:w-1/2 lg:h-[600px] lg:top-1/2 lg:-translate-y-1/2 z-0 lg:z-10 opacity-30 lg:opacity-100 pointer-events-none lg:pointer-events-auto transition-opacity duration-700"
       >
-        {isSplineLoading && (
+        {isNearView && isSplineLoading && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-bg-primary/50 backdrop-blur-sm z-20">
             <div className="relative w-14 h-14 mb-4">
               <div className="absolute inset-0 rounded-full border-2 border-accent/20 animate-pulse" />
@@ -145,10 +147,12 @@ export default function Contact() {
             </span>
           </div>
         )}
-        <Spline
-          scene="https://prod.spline.design/ugsf8Y3oatPuKhvV/scene.splinecode"
-          onLoad={() => setIsSplineLoading(false)}
-        />
+        {isNearView && (
+          <Spline
+            scene="https://prod.spline.design/ugsf8Y3oatPuKhvV/scene.splinecode"
+            onLoad={() => setIsSplineLoading(false)}
+          />
+        )}
       </div>
 
       <div className="relative z-10 max-w-[600px] lg:max-w-[1200px] w-full mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center" ref={ref}>

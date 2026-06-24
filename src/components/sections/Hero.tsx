@@ -1,11 +1,12 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import dynamic from "next/dynamic";
 import { personalInfo } from "@/lib/data";
 import { ChevronDown } from "lucide-react";
+import { useBackground } from "@/components/backgrounds/BackgroundProvider";
 
 const HeroScene = dynamic(() => import("@/components/three/HeroScene"), {
   ssr: false,
@@ -13,12 +14,18 @@ const HeroScene = dynamic(() => import("@/components/three/HeroScene"), {
 
 export default function Hero() {
   const ref = useRef<HTMLElement>(null);
+  const isHeroInView = useInView(ref, { margin: "200px 0px 200px 0px" });
+  const { setIsLiquidEtherEnabled } = useBackground();
+
+  useEffect(() => {
+    setIsLiquidEtherEnabled(!isHeroInView);
+    return () => setIsLiquidEtherEnabled(true);
+  }, [isHeroInView, setIsLiquidEtherEnabled]);
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
   });
-  const imageY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
-  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "10%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   return (
@@ -39,7 +46,7 @@ export default function Hero() {
       </div>
 
       {/* Three.js background */}
-      <HeroScene />
+      {isHeroInView && <HeroScene />}
 
       {/* Decorative arcs (white circles like reference) */}
       <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden">
@@ -76,7 +83,7 @@ export default function Hero() {
         style={{ opacity }}
       >
         {/* Left: Text content */}
-        <motion.div className="flex-1 max-w-[550px]" style={{ y: textY }}>
+        <motion.div className="flex-1 max-w-[550px]">
           <motion.h1
             className="text-[2.2rem] sm:text-[3rem] md:text-[4rem] lg:text-[4.5rem] font-black leading-[0.95] tracking-[2px] uppercase mb-4"
             style={{ fontFamily: "var(--font-family-heading)" }}
@@ -131,7 +138,14 @@ export default function Hero() {
             whileTap={{ scale: 0.98 }}
             onClick={(e) => {
               e.preventDefault();
-              document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
+              const target = document.getElementById("projects");
+              if (target) {
+                if ((window as any).lenis) {
+                  (window as any).lenis.scrollTo(target);
+                } else {
+                  target.scrollIntoView({ behavior: "smooth" });
+                }
+              }
             }}
           >
             Explore Portfolio

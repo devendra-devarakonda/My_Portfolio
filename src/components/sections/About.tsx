@@ -11,7 +11,7 @@ export default function About() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="about" className="relative py-24 md:py-32 bg-black/30 backdrop-blur-sm overflow-hidden">
+    <section id="about" className="relative py-24 md:py-32 bg-[#050B17]/90 overflow-hidden">
       {/* Decorative line */}
       <div className="absolute top-12 right-0 w-24 h-[1px] bg-gradient-to-l from-accent/30 to-transparent" />
 

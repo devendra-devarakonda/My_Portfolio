@@ -12,6 +12,7 @@ import './tech-stack.css';
 export default function Skills() {
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, amount: 0.2 });
+  const isCurrentlyInView = useInView(containerRef, { margin: "200px 0px 200px 0px" });
 
   // Initial entry state
   const [hasEntered, setHasEntered] = useState(false);
@@ -50,7 +51,7 @@ export default function Skills() {
 
   // Float animation timer
   useEffect(() => {
-    if (!hasEntered) return;
+    if (!hasEntered || !isCurrentlyInView) return;
     let animId: number;
     const tick = () => {
       setTime((t) => t + 0.015);
@@ -58,7 +59,7 @@ export default function Skills() {
     };
     animId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(animId);
-  }, [hasEntered]);
+  }, [hasEntered, isCurrentlyInView]);
 
   // Determine limits based on screen size
   const isMobile = windowWidth < 768;
@@ -171,7 +172,7 @@ export default function Skills() {
     <section 
       id="skills"
       ref={containerRef}
-      className="tech-container py-12 md:py-16 flex flex-col items-center justify-between min-h-[125vh] bg-black/30 backdrop-blur-sm"
+      className="tech-container py-12 md:py-16 flex flex-col items-center justify-between min-h-[125vh] bg-[#050B17]/90"
       onMouseEnter={() => setIsSectionHovered(true)}
       onMouseLeave={() => setIsSectionHovered(false)}
     >
@@ -210,12 +211,14 @@ export default function Skills() {
           />
 
           {/* R3F Crystal Core */}
-          <TechCube 
-            isHovered={isSectionHovered} 
-            pulseTrigger={pulseTrigger} 
-            transitionState={transitionState}
-            categoryColor={categoryColor}
-          />
+          {isCurrentlyInView && (
+            <TechCube 
+              isHovered={isSectionHovered} 
+              pulseTrigger={pulseTrigger} 
+              transitionState={transitionState}
+              categoryColor={categoryColor}
+            />
+          )}
 
           {/* SVG Connection Lines */}
           <TechConnections

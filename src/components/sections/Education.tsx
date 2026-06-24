@@ -24,8 +24,8 @@ export default function EducationTimeline() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const pathFilter = "drop-shadow(0 0 8px rgba(255,138,138,0.8)) drop-shadow(0 0 20px rgba(255,138,138,0.6)) drop-shadow(0 0 40px rgba(255,138,138,0.4))";
-  const nodeFilter = "drop-shadow(0 0 10px rgba(255,217,138,0.8))";
+  const pathFilter = "drop-shadow(0 0 10px rgba(255,138,138,0.5))";
+  const nodeFilter = "drop-shadow(0 0 6px rgba(255,217,138,0.5))";
 
   // Desktop paths and coordinates
   const desktopPath = "M 50 280 L 530 280 A 160 160 0 0 1 530 600 L 150 600 A 125 125 0 0 0 150 850 L 750 850";
@@ -35,7 +35,7 @@ export default function EducationTimeline() {
   const mobileContainerHeight = mobileSvgHeight + 100;
 
   return (
-    <section className="timeline-container py-24 md:py-32 flex flex-col items-center justify-center bg-black/30 backdrop-blur-sm">
+    <section className="timeline-container py-24 md:py-32 flex flex-col items-center justify-center bg-[#050B17]/90">
       {/* Desktop / Tablet View */}
       {!isMobile ? (
         <div
@@ -100,32 +100,23 @@ export default function EducationTimeline() {
                   strokeWidth="1.5"
                   style={{ filter: "drop-shadow(0 0 6px rgba(255,217,138,0.5))" }}
                   animate={{
-                    scale: [1, 1.4, 1],
-                    opacity: [0.3, 0.7, 0.3],
+                    scale: [1, 1.1, 1],
+                    opacity: [0.4, 0.6, 0.4],
                   }}
                   transition={{
-                    duration: 2.5,
+                    duration: 4,
                     repeat: Infinity,
                     ease: "easeInOut",
                   }}
                 />
 
-                {/* Glowing Node Core */}
-                <motion.circle
+                {/* Glowing Node Core - Static for optimized rendering performance */}
+                <circle
                   cx={item.nodePos.x}
                   cy={item.nodePos.y}
                   r="7"
                   fill="#ffd98a"
                   style={{ filter: nodeFilter }}
-                  animate={{
-                    scale: [1, 1.15, 1],
-                    opacity: [0.9, 1, 0.9],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
                 />
               </g>
             ))}
@@ -162,7 +153,7 @@ export default function EducationTimeline() {
                     {item.institution}
                   </p>
                 </div>
-                <button className="glass-btn text-[10px] font-semibold text-gray-800 py-1.5 px-3 w-fit tracking-wide cursor-pointer">
+                <button className="glass-btn text-[10px] font-semibold text-white py-1.5 px-3 w-fit tracking-wide cursor-pointer">
                   view more
                 </button>
               </div>
@@ -239,28 +230,22 @@ export default function EducationTimeline() {
                     strokeWidth="1.5"
                     style={{ filter: "drop-shadow(0 0 6px rgba(255,217,138,0.5))" }}
                     animate={{
-                      scale: [1, 1.4, 1],
-                      opacity: [0.3, 0.7, 0.3],
+                      scale: [1, 1.1, 1],
+                      opacity: [0.4, 0.6, 0.4],
                     }}
                     transition={{
-                      duration: 2.5,
+                      duration: 4,
                       repeat: Infinity,
+                      ease: "easeInOut",
                     }}
                   />
-                  {/* Glowing Node Core */}
-                  <motion.circle
+                  {/* Glowing Node Core - Static for optimized rendering performance */}
+                  <circle
                     cx={xStart}
                     cy={nodeY}
                     r="6"
                     fill="#ffd98a"
                     style={{ filter: nodeFilter }}
-                    animate={{
-                      scale: [1, 1.15, 1],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                    }}
                   />
                 </g>
               );
@@ -296,14 +281,14 @@ export default function EducationTimeline() {
 
                 <div className="p-3 flex flex-col h-[120px] justify-between">
                   <div>
-                    <h3 className="text-xs font-semibold text-gray-900 leading-snug">
+                    <h3 className="text-xs font-semibold text-white leading-snug">
                       {item.title}
                     </h3>
-                    <p className="text-[10px] font-medium text-gray-600 mt-0.5 line-clamp-2">
+                    <p className="text-[10px] font-medium text-gray-400 mt-0.5 line-clamp-2">
                       {item.institution}
                     </p>
                   </div>
-                  <button className="glass-btn text-[9px] font-semibold text-gray-800 py-1 px-2.5 w-fit tracking-wide cursor-pointer">
+                  <button className="glass-btn text-[9px] font-semibold text-white py-1 px-2.5 w-fit tracking-wide cursor-pointer">
                     view more
                   </button>
                 </div>
