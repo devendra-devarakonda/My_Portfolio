@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, useInView } from "framer-motion";
 import { blogs } from "@/lib/data";
 import { ArrowRight } from "lucide-react";
+import SectionHeading from "@/components/section-headings/SectionHeading";
 
 export default function Blogs() {
   const ref = useRef(null);
@@ -13,15 +14,14 @@ export default function Blogs() {
   return (
     <section id="blogs" className="relative py-24 md:py-32 bg-[#050B17]/90 overflow-hidden">
       <div className="max-w-[1200px] mx-auto px-6" ref={ref}>
-        <motion.h2
+        <SectionHeading
           className="text-3xl md:text-4xl font-black tracking-[3px] uppercase mb-12"
-          style={{ fontFamily: "var(--font-family-heading)" }}
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
           MY BLOGS
-        </motion.h2>
+        </SectionHeading>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {blogs.map((blog, i) => (

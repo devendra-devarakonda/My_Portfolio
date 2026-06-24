@@ -8,6 +8,7 @@ import TechNode from './TechNode';
 import TechConnections from './TechConnections';
 import NavigationControls from './NavigationControls';
 import './tech-stack.css';
+import SectionHeading from '@/components/section-headings/SectionHeading';
 
 export default function Skills() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -180,9 +181,9 @@ export default function Skills() {
 
       {/* Title Header */}
       <div className="text-center z-30 shrink-0 mb-6">
-        <h2 className="tech-heading text-3xl md:text-5xl font-black tracking-[4px] uppercase text-white">
+        <SectionHeading className="tech-heading text-3xl md:text-5xl font-black tracking-[4px] uppercase text-white">
           TECH STACK
-        </h2>
+        </SectionHeading>
         <div 
           className="w-16 h-[2px] mx-auto mt-3 transition-colors duration-500" 
           style={{ backgroundColor: categoryColor, boxShadow: `0 0 8px ${categoryColor}` }}

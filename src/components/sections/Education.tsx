@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { educationData } from '../../lib/education';
 import '../../app/education.css';
+import SectionHeading from '@/components/section-headings/SectionHeading';
 
 export default function EducationTimeline() {
   const [scale, setScale] = useState(1);
@@ -46,9 +47,9 @@ export default function EducationTimeline() {
             height: `${1150 * scale}px`
           }}
         >
-          <h2 className="absolute top-6 left-10 text-9xl font-[family-name:var(--font-family-heading)] font-bold text-white tracking-tight z-20">
-            Education
-          </h2>
+          <SectionHeading className="absolute top-6 left-10 text-9xl font-bold text-white tracking-tight z-20">
+            EDUCATION
+          </SectionHeading>
 
           {/* SVG Timeline Path */}
           <svg
@@ -163,9 +164,9 @@ export default function EducationTimeline() {
       ) : (
         /* Mobile Layout: Alternating Vertical Center Timeline */
         <div className="relative w-full max-w-[400px] mx-auto px-4" style={{ height: `${mobileContainerHeight}px` }}>
-          <h2 className="text-4xl font-bold text-gray-800 mb-12 pl-4 z-20">
-            Education
-          </h2>
+          <SectionHeading className="text-4xl font-bold text-white mb-12 pl-4 z-20">
+            EDUCATION
+          </SectionHeading>
 
           {/* Center Timeline SVG */}
           <svg

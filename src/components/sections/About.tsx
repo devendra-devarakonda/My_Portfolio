@@ -5,6 +5,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { personalInfo } from "@/lib/data";
 import { Download } from "lucide-react";
+import SectionHeading from "@/components/section-headings/SectionHeading";
 
 export default function About() {
   const ref = useRef(null);
@@ -56,15 +57,14 @@ export default function About() {
 
           {/* Right: Content */}
           <div>
-            <motion.h2
+            <SectionHeading
               className="text-3xl md:text-4xl font-black tracking-[3px] uppercase mb-6"
-              style={{ fontFamily: "var(--font-family-heading)" }}
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               ABOUT
-            </motion.h2>
+            </SectionHeading>
 
             <motion.p
               className="text-white/60 text-sm md:text-[0.95rem] leading-[1.9] mb-4"

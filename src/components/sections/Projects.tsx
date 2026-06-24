@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, useInView } from "framer-motion";
 import { projects } from "@/lib/data";
 import { ExternalLink, Code2, Search } from "lucide-react";
+import SectionHeading from "@/components/section-headings/SectionHeading";
 
 const filters = [
   { id: "all", label: "Featured" },
@@ -30,15 +31,14 @@ export default function Projects() {
       <div className="max-w-[1200px] mx-auto px-6" ref={ref}>
         {/* Header */}
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 mb-12">
-          <motion.h2
+          <SectionHeading
             className="text-3xl md:text-4xl font-black tracking-[3px] uppercase"
-            style={{ fontFamily: "var(--font-family-heading)" }}
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
           >
             PROJECTS
-          </motion.h2>
+          </SectionHeading>
 
           <motion.div
             className="flex flex-col sm:flex-row items-start sm:items-center gap-4"

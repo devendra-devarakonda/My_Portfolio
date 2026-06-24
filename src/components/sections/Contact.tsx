@@ -5,6 +5,7 @@ import { motion, useInView } from "framer-motion";
 import { socialLinks } from "@/lib/data";
 import { Send } from "lucide-react";
 import dynamic from "next/dynamic";
+import SectionHeading from "@/components/section-headings/SectionHeading";
 
 const Spline = dynamic(() => import("@splinetool/react-spline"), {
   ssr: false,
@@ -177,15 +178,14 @@ export default function Contact() {
 
         {/* Right column containing the Contact Heading, Form, and Social Links */}
         <div className="w-full flex flex-col">
-          <motion.h2
+          <SectionHeading
             className="text-3xl md:text-4xl font-black tracking-[3px] uppercase text-center lg:text-left mb-12"
-            style={{ fontFamily: "var(--font-family-heading)" }}
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
           >
             MY CONTACT
-          </motion.h2>
+          </SectionHeading>
 
           <motion.form
             onSubmit={handleSubmit}
