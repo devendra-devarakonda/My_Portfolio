@@ -93,6 +93,9 @@ export default function Hero() {
           >
             <span className="block">{personalInfo.name}</span>
             <span className="block">{personalInfo.lastName}</span>
+            <span className="sr-only">
+              Dev Devarakonda — Devendra Devarakonda Personal Portfolio and Engineering Showcase
+            </span>
           </motion.h1>
 
           <motion.p

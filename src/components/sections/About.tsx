@@ -11,7 +11,7 @@ export default function About() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
-  const aboutText = `I am a visionary developer who combines technology and form into compelling and professional solutions. With expertise in full-stack development and AI engineering, I create products that make a real impact. With a passion for building scalable applications and AI-powered products, I bring ideas to life through elegant code, innovative architecture, and immersive digital experiences that push boundaries.`;
+  const aboutText = `Devendra Devarakonda (commonly known as Dev Devarakonda) is a visionary developer who combines technology and form into compelling and professional solutions. With expertise in full-stack development and AI engineering, he creates products that make a real impact. With a passion for building scalable applications and AI-powered products, he brings ideas to life through elegant code, innovative architecture, and immersive digital experiences that push boundaries.`;
 
   return (
     <section 

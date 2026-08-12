@@ -34,10 +34,70 @@ const shareTechMono = Share_Tech_Mono({
   display: "swap",
 });
 
+const siteUrl = "https://devdevarakonda.in";
+
 export const metadata: Metadata = {
-  title: "Devendra Devarakonda | Full Stack Developer & AI Engineer",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Devendra Devarakonda | Dev Devarakonda — Full Stack Developer & AI Engineer",
+    template: "%s | Devendra Devarakonda",
+  },
   description:
-    "Portfolio of Devendra Devarakonda — Full Stack Developer & AI Engineer. Building scalable software, AI-powered products, and immersive digital experiences.",
+    "Official portfolio of Devendra Devarakonda (Dev Devarakonda) — Full Stack Developer & AI Engineer specializing in React, Next.js, Node.js, and Machine Learning.",
+  keywords: [
+    "Devendra Devarakonda",
+    "Dev Devarakonda",
+    "devdevarakonda",
+    "Devendra Devarakonda Portfolio",
+    "Dev Devarakonda Software Engineer",
+    "Full Stack Developer India",
+    "AI Engineer Portfolio",
+  ],
+  authors: [{ name: "Devendra Devarakonda", url: siteUrl }],
+  creator: "Devendra Devarakonda",
+  publisher: "Devendra Devarakonda",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: siteUrl,
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: siteUrl,
+    title: "Devendra Devarakonda (Dev Devarakonda) | Full Stack & AI Engineer",
+    description:
+      "Explore the portfolio, AI projects, and full-stack software built by Devendra Devarakonda.",
+    siteName: "Devendra Devarakonda Portfolio",
+    images: [
+      {
+        url: `${siteUrl}/images/hero.jpg`,
+        width: 1200,
+        height: 630,
+        alt: "Devendra Devarakonda — Full Stack Developer & AI Engineer",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Devendra Devarakonda | Dev Devarakonda",
+    description:
+      "Full Stack Developer & AI Engineer portfolio of Devendra Devarakonda.",
+    images: [`${siteUrl}/images/hero.jpg`],
+    creator: "@devdevarakonda",
+  },
+  verification: {
+    google: "YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE",
+  },
 };
 
 export default function RootLayout({
