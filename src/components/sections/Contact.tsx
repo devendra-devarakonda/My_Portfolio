@@ -1,30 +1,15 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { socialLinks } from "@/lib/data";
 import { Send } from "lucide-react";
 import dynamic from "next/dynamic";
 import SectionHeading from "@/components/section-headings/SectionHeading";
 
-const Spline = dynamic(() => import("@splinetool/react-spline"), {
+const Globe = dynamic(() => import("@/components/ui/Globe"), {
   ssr: false,
 });
-
-// Suppress internal Spline runtime timeline error in Next.js DevTools overlay
-if (typeof window !== "undefined") {
-  const originalError = console.error;
-  console.error = (...args: any[]) => {
-    if (
-      args[0] &&
-      typeof args[0] === "string" &&
-      args[0].includes("Missing property")
-    ) {
-      return;
-    }
-    originalError(...args);
-  };
-}
 
 // Custom SVG icons since lucide-react removed brand icons
 const LinkedInIcon = () => (
@@ -69,49 +54,9 @@ export default function Contact() {
   const ref = useRef(null);
   const sectionRef = useRef(null);
   const isNearView = useInView(sectionRef, { margin: "400px 0px 400px 0px" });
-  const splineContainerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
-  const [isSplineLoading, setIsSplineLoading] = useState(true);
-
-  useEffect(() => {
-    const container = splineContainerRef.current;
-    if (!container) return;
-
-    const cleanup = () => {
-      // 1. Light DOM links
-      container.querySelectorAll('a[href*="spline.design"]').forEach((el) => el.remove());
-      container.querySelectorAll('a[href*="spline"]').forEach((el) => el.remove());
-
-      // 2. Shadow DOM links/elements (like #logo in spline-viewer)
-      container.querySelectorAll('*').forEach((el) => {
-        if (el.shadowRoot) {
-          el.shadowRoot.querySelectorAll('#logo, a[href*="spline"], a[href*="spline.design"]').forEach((logo) => {
-            logo.remove();
-          });
-        }
-      });
-    };
-
-    cleanup();
-
-    const observer = new MutationObserver(() => {
-      cleanup();
-    });
-
-    observer.observe(container, {
-      childList: true,
-      subtree: true,
-    });
-
-    const interval = setInterval(cleanup, 500);
-
-    return () => {
-      observer.disconnect();
-      clearInterval(interval);
-    };
-  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -126,41 +71,35 @@ export default function Contact() {
       <div className="absolute top-20 right-0 w-20 h-[1px] bg-gradient-to-l from-accent/30 to-transparent" />
       <div className="absolute bottom-20 left-0 w-20 h-[1px] bg-gradient-to-r from-accent/30 to-transparent" />
 
-      {/* Spline Canvas wrapper
+      {/* Interactive 3D Globe canvas wrapper
           Mobile: absolute background, low opacity, clicks pass-through
           Laptop/Desktop: positioned on the left half, full opacity, interactive
       */}
       <div 
-        ref={splineContainerRef}
         className="absolute inset-0 lg:left-0 lg:right-auto lg:w-1/2 lg:h-[600px] lg:top-1/2 lg:-translate-y-1/2 z-0 lg:z-10 opacity-30 lg:opacity-100 pointer-events-none lg:pointer-events-auto transition-opacity duration-700"
       >
-        {isNearView && isSplineLoading && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-bg-primary/50 backdrop-blur-sm z-20">
-            <div className="relative w-14 h-14 mb-4">
-              <div className="absolute inset-0 rounded-full border-2 border-accent/20 animate-pulse" />
-              <div className="absolute inset-0 rounded-full border-2 border-t-accent animate-spin" />
-            </div>
-            <span 
-              className="text-[10px] uppercase tracking-[3px] text-accent font-bold animate-pulse"
-              style={{ fontFamily: "var(--font-family-heading)" }}
-            >
-              Loading 3D Core...
-            </span>
-          </div>
-        )}
         {isNearView && (
-          <Spline
-            scene="https://prod.spline.design/ugsf8Y3oatPuKhvV/scene.splinecode"
-            onLoad={() => setIsSplineLoading(false)}
+          <Globe
+            speed={2}
+            smoothing={8}
+            scale={8}
+            dots={{ color: "#ffffff", size: 5, density: 8, allDots: false }}
+            oceanColor="#050B17"
+            outlineColor="#FF2B4D"
+            showOutline={true}
+            graticuleColor="rgba(255, 255, 255, 0.08)"
+            showGrid={true}
+            dragSpeed={5}
+            markerConfig={{ markers: [], color: "#FF2B4D", size: 40 }}
           />
         )}
       </div>
 
       <div className="relative z-10 max-w-[600px] lg:max-w-[1200px] w-full mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center" ref={ref}>
-        {/* Left spacer column for laptop/desktop (so Spline has its visual area) */}
+        {/* Left spacer column for laptop/desktop (so Globe has its visual area) */}
         <div className="hidden lg:block h-[560px] relative pointer-events-none">
-          {/* Cover panel containing social links to mask the Spline watermark on laptop */}
-          <div className="absolute bottom-0 left-32 bg-bg-primary pl-4 pt-4 pb-2 pr-2 z-20 pointer-events-auto flex items-center gap-40 rounded-tl-xl border-t border-l border-white/[0.05]">
+          {/* Social links panel placed on the left column */}
+          <div className="absolute bottom-0 left-0 bg-bg-primary/80 backdrop-blur-md pl-4 pt-4 pb-2 pr-4 z-20 pointer-events-auto flex items-center gap-4 rounded-tr-xl border-t border-r border-white/[0.05]">
             {socialLinks.map((link) => (
               <a
                 key={link.name}
@@ -248,7 +187,7 @@ export default function Contact() {
         </div>
       </div>
 
-      {/* Mobile-only social links positioned at the bottom right to mask the Spline watermark */}
+      {/* Mobile-only social links */}
       <div className="lg:hidden absolute bottom-3 right-3 bg-bg-primary pl-4 pt-4 pb-2 pr-2 z-20 pointer-events-auto flex items-center gap-4 rounded-tl-xl border-t border-l border-white/[0.05]">
         {socialLinks.map((link) => (
           <a
