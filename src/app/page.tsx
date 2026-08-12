@@ -20,6 +20,7 @@ import CinematicLoader from "@/components/effects/CinematicLoader";
 import Navbar from "@/components/layout/Navbar";
 import Hero from "@/components/sections/Hero"; // Keep Hero static so it draws fast above the fold
 import { BackgroundProvider } from "@/components/backgrounds/BackgroundProvider";
+import StructuredData from "@/components/SEO/StructuredData";
 
 const GlobalBackground = dynamic(
   () => import("@/components/backgrounds/GlobalBackground"),
@@ -40,46 +41,10 @@ const FloatingHireCTA = dynamic(() => import("@/components/effects/FloatingHireC
 const CustomCursor = dynamic(() => import("@/components/effects/CustomCursor"), { ssr: false });
 
 export default function Home() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Devendra Devarakonda",
-    "alternateName": ["Dev Devarakonda", "Devendra", "devdevarakonda"],
-    "url": "https://devdevarakonda.in",
-    "image": "https://devdevarakonda.in/images/hero.jpg",
-    "jobTitle": "Full Stack Developer & AI Engineer",
-    "worksFor": {
-      "@type": "Organization",
-      "name": "Freelance / Software Engineering"
-    },
-    "alumniOf": {
-      "@type": "EducationalOrganization",
-      "name": "Rajiv Gandhi University of Knowledge Technologies"
-    },
-    "sameAs": [
-      "https://github.com/devendra-devarakonda",
-      "https://linkedin.com/in/devendra-devarakonda",
-      "https://x.com/devdevarakonda"
-    ],
-    "knowsAbout": [
-      "Full Stack Web Development",
-      "Artificial Intelligence",
-      "React",
-      "Next.js",
-      "Node.js",
-      "Python",
-      "Machine Learning"
-    ],
-    "description": "Devendra Devarakonda (Dev Devarakonda) is a Full Stack Developer & AI Engineer building scalable web applications and intelligent software solutions."
-  };
-
   return (
     <BackgroundProvider>
-      {/* Inject JSON-LD Schema for Google Search */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      {/* Inject JSON-LD Graph Schema for Google Search */}
+      <StructuredData />
 
       {/* Cinematic Loader */}
       <CinematicLoader />
