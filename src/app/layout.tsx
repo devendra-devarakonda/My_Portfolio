@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Orbitron, Inter, JetBrains_Mono, Outfit, Share_Tech_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import SmoothScrollProvider from "@/components/effects/SmoothScrollProvider";
 
@@ -107,6 +108,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Google Analytics (gtag.js) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-C0K6QJYFFL"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-C0K6QJYFFL');
+          `}
+        </Script>
+      </head>
       <body className={`${inter.variable} ${orbitron.variable} ${jetbrainsMono.variable} ${outfit.variable} ${shareTechMono.variable} min-h-screen bg-[#050B17] text-white antialiased overflow-x-hidden`} suppressHydrationWarning>
         <SmoothScrollProvider>
           {children}
