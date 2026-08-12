@@ -6,6 +6,7 @@ import { motion, useInView } from "framer-motion";
 import { projects } from "@/lib/data";
 import { ExternalLink, Code2, Search } from "lucide-react";
 import SectionHeading from "@/components/section-headings/SectionHeading";
+import HoverImageReveal from "@/components/ui/HoverImageReveal";
 
 const filters = [
   { id: "all", label: "Featured" },
@@ -25,6 +26,22 @@ export default function Projects() {
     const matchesSearch = p.title.toLowerCase().includes(search.toLowerCase());
     return matchesFilter && matchesSearch;
   });
+
+  // Construct items format for HoverImageReveal component on Desktop
+  const desktopItems = {
+    itemCount: Math.min(6, filtered.length),
+    ...filtered.slice(0, 6).reduce((acc, p, idx) => {
+      acc[`item${idx + 1}`] = {
+        text: p.title.toUpperCase(),
+        image: { src: p.image, alt: p.title },
+        description: p.description,
+        tags: p.tags,
+        liveUrl: p.liveUrl,
+        codeUrl: p.codeUrl,
+      };
+      return acc;
+    }, {} as Record<string, unknown>),
+  };
 
   return (
     <section id="projects" className="relative py-24 md:py-32 bg-[#050B17]/90 overflow-hidden">
@@ -77,8 +94,37 @@ export default function Projects() {
           </motion.div>
         </div>
 
-        {/* Projects grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Desktop View: Side Image Reveal Showcase */}
+        <div className="hidden md:block min-h-[460px]">
+          {filtered.length > 0 ? (
+            <HoverImageReveal
+              items={desktopItems}
+              mode="side"
+              backgroundColor="transparent"
+              textColor="#FFFFFF"
+              dimColor="rgba(255, 255, 255, 0.25)"
+              align="left"
+              rowGap={28}
+              imageWidth="56%"
+              imageHeight="430px"
+              rounded={20}
+              font={{
+                fontFamily: "var(--font-family-heading)",
+                fontWeight: 800,
+                fontSize: "2.8rem",
+                lineHeight: "1.15em",
+                letterSpacing: "0.03em",
+              }}
+            />
+          ) : (
+            <div className="py-20 text-center text-white/40 text-sm">
+              No projects match your filter.
+            </div>
+          )}
+        </div>
+
+        {/* Mobile View: Original Card Grid (Untouched) */}
+        <div className="block md:hidden grid grid-cols-1 sm:grid-cols-2 gap-6">
           {filtered.map((project, i) => (
             <motion.div
               key={project.id}
@@ -94,7 +140,7 @@ export default function Projects() {
                   src={project.image}
                   alt={project.title}
                   fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  sizes="(max-width: 640px) 100vw, 50vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-bg-card to-transparent" />

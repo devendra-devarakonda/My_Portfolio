@@ -54,16 +54,18 @@ export default function CustomCursor() {
       requestAnimationFrame(animate);
     };
 
+    const handleOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target && target.closest && target.closest('a, button, input, textarea, [role="button"], .interactive')) {
+        onMouseEnterInteractive();
+      } else {
+        onMouseLeaveInteractive();
+      }
+    };
+
+    window.addEventListener("mouseover", handleOver, { passive: true });
     document.addEventListener("mousemove", onMouseMove);
     requestAnimationFrame(animate);
-
-    const interactiveElements = document.querySelectorAll(
-      'a, button, input, textarea, [role="button"], .interactive'
-    );
-    interactiveElements.forEach((el) => {
-      el.addEventListener("mouseenter", onMouseEnterInteractive);
-      el.addEventListener("mouseleave", onMouseLeaveInteractive);
-    });
 
     // Hide on mobile
     const mediaQuery = window.matchMedia("(max-width: 768px)");
@@ -78,11 +80,8 @@ export default function CustomCursor() {
     return () => {
       isRafActive = false;
       document.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseover", handleOver);
       mediaQuery.removeEventListener("change", handleMediaChange);
-      interactiveElements.forEach((el) => {
-        el.removeEventListener("mouseenter", onMouseEnterInteractive);
-        el.removeEventListener("mouseleave", onMouseLeaveInteractive);
-      });
     };
   }, []);
 

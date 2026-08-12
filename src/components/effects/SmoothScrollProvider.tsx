@@ -18,6 +18,15 @@ export default function SmoothScrollProvider({ children }: { children: React.Rea
       touchMultiplier: 1.3,
     });
 
+    let scrollTimeout: NodeJS.Timeout;
+    lenis.on("scroll", () => {
+      document.body.classList.add("is-scrolling");
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        document.body.classList.remove("is-scrolling");
+      }, 150);
+    });
+
     lenisRef.current = lenis;
     if (typeof window !== "undefined") {
       (window as any).lenis = lenis;
@@ -46,6 +55,8 @@ export default function SmoothScrollProvider({ children }: { children: React.Rea
 
     return () => {
       cancelAnimationFrame(rafId);
+      clearTimeout(scrollTimeout);
+      document.body.classList.remove("is-scrolling");
       lenis.destroy();
       if (typeof window !== "undefined") {
         delete (window as any).lenis;

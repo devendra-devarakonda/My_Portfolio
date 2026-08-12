@@ -212,3 +212,19 @@ input, textarea { font-family: inherit; border: none; outline: none; background:
   animation: shimmer 0.8s forwards;
 }
 
+/* ============================================
+   HARDWARE ACCELERATION & SCROLL OPTIMIZATION
+   ============================================ */
+section, canvas, .glass, .glass-card {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Disable heavy backdrop-blur during active scrolling to prevent frame drops */
+body.is-scrolling .glass,
+body.is-scrolling nav {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
